@@ -1,7 +1,22 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:media_play/audio_file.dart';
 
-class DetailAudioPage extends StatelessWidget {
+class DetailAudioPage extends StatefulWidget {
   const DetailAudioPage({super.key});
+
+  @override
+  State<DetailAudioPage> createState() => _DetailAudioPageState();
+}
+
+class _DetailAudioPageState extends State<DetailAudioPage> {
+  AudioPlayer? advancedPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    advancedPlayer = AudioPlayer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +81,7 @@ class DetailAudioPage extends StatelessWidget {
                     'Martin Hyatt',
                     style: TextStyle(fontSize: 20),
                   ),
+                  AudioFile(advancedPlayer: advancedPlayer!),
                 ],
               ),
             ),
