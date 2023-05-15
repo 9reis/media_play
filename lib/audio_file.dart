@@ -1,5 +1,5 @@
-import 'dart:html';
-import 'dart:js_interop';
+// import 'dart:html';
+// import 'dart:js_interop';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +19,13 @@ class _AudioFileState extends State<AudioFile> {
   Duration _position = Duration();
 
   final String path =
-      'https://soundcloud.com/bluedjjang/daniel-caesar-best-part-feat-her-cover-with-charming_jo?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing';
+      'https://soundcloud.com/danielcaesar/japanese-denim?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing';
 
   bool isPlaying = false;
   bool isPaused = false;
-  bool isLoop = false;
+  bool isRepeat = false;
+
+  Color color = Colors.black;
 
   List<IconData> _icons = [
     Icons.play_circle_filled,
@@ -44,7 +46,18 @@ class _AudioFileState extends State<AudioFile> {
         _position = p;
       });
     });
-    this.widget.advancedPlayer.setSource(path as Source);
+    this.widget.advancedPlayer.setSourceUrl(path);
+    this.widget.advancedPlayer.onPlayerComplete.listen((event) {
+      setState(() {
+        _position = Duration(seconds: 0);
+        if (isRepeat == true) {
+          isPlaying = true;
+        } else {
+          isPlaying = false;
+          isRepeat = false;
+        }
+      });
+    });
   }
 
   Widget btnStart() {
@@ -57,7 +70,7 @@ class _AudioFileState extends State<AudioFile> {
               color: Colors.blue,
             )
           : Icon(
-              _icons[0],
+              _icons[1],
               size: 50,
               color: Colors.blue,
             ),
@@ -69,7 +82,7 @@ class _AudioFileState extends State<AudioFile> {
           });
         } else if (isPlaying == true) {
           setState(() {
-            this.widget.advancedPlayer.play(path as Source);
+            this.widget.advancedPlayer.pause();
             isPlaying = false;
           });
         }
@@ -101,15 +114,51 @@ class _AudioFileState extends State<AudioFile> {
     );
   }
 
+  Widget btnLoop() {
+    return IconButton(
+      icon: ImageIcon(
+        AssetImage('assets/loop.png'),
+        size: 15,
+        color: color,
+      ),
+      onPressed: () {},
+    );
+  }
+
+  Widget btnRepeat() {
+    return IconButton(
+      icon: ImageIcon(
+        AssetImage('assets/repeat.png'),
+        size: 15,
+        color: color,
+      ),
+      onPressed: () {
+        if (isRepeat == false) {
+          this.widget.advancedPlayer.setReleaseMode(ReleaseMode.loop);
+          setState(() {
+            isRepeat = true;
+            color = Colors.blue;
+          });
+        } else if (isRepeat == true) {
+          this.widget.advancedPlayer.setReleaseMode(ReleaseMode.release);
+          color = Colors.black;
+          isRepeat = false;
+        }
+      },
+    );
+  }
+
   Widget loadAsset() {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          btnRepeat(),
           btnSlow(),
           btnStart(),
           btnFast(),
+          btnLoop(),
         ],
       ),
     );

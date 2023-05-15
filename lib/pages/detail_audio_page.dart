@@ -61,7 +61,7 @@ class _DetailAudioPageState extends State<DetailAudioPage> {
             left: 0,
             right: 0,
             top: screenHeight * 0.20,
-            height: screenHeight * 0.36,
+            height: screenHeight * 0.40,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white54,
